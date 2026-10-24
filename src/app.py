@@ -78,7 +78,22 @@ def actualizar_cursor(mat):
     except Exception as ex:
         return jsonify({"message": "error {}".format(ex),'exito':False})
 
-    
+@app.route("/alumnos/<mat>", methods=['DELETE'])
+def eliminar(mat):
+    try:
+        alumno=leer_alumno_bd(mat)
+        if alumno != None:
+            cursor=con.connection.cursor()
+            sql = "DELETE FROM alumnos WHERE matricula = {0}".format(mat)
+            cursor.execute(sql)
+            con.connection.commit()
+            return jsonify({'mensaje': "Alumno Elimnado", 'exito': True})
+        else:
+            return jsonify({'alumno':alumno,
+            'mensaje:': 'Alumno no borrado', 'exito': False})
+
+    except Exception as ex:
+        return jsonify({"message": "error {0}".format(ex),'exito':False})
 
 @app.route("/alumnos/<mat>", methods=["GET"])
 def leer_alumno(mat):
